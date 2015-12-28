@@ -11,7 +11,7 @@ import { Timecard } from '../components/Timecard'
 // the component can be tested w/ and w/o being connected.
 // See: http://rackt.github.io/redux/docs/recipes/WritingTests.html
 const mapStateToProps = (state) => ({
-  timesheet: state.timecard
+  timesheet: state.timecard.toJS()
 })
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(Object.assign({}, timesheetActions, timecardActions), dispatch)

@@ -1,5 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
-import { update } from 'redux/utils/TimesheetUtils'
+import { Map } from 'immutable'
+import * as TimesheetUtils from 'redux/utils/TimesheetUtils'
 
 // ------------------------------------
 // Constants
@@ -26,15 +27,15 @@ export const actions = {
 // ------------------------------------
 export default handleActions({
   UPDATE_TIMECARD: (state, { payload }) => {
-    return update(state, payload)
+    return TimesheetUtils.update(state, payload)
   },
 
   CLOCK_IN: (state, { payload }) => {
-    state.start = payload
+    return TimesheetUtils.clockIn(state, payload)
   },
 
   CLOCK_OUT: (state, { payload }) => {
-    state.end = payload
+    return TimesheetUtils.clockOut(state, payload)
   }
 
-}, { })
+}, Map())
