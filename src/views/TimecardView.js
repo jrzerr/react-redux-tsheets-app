@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { actions as timesheetActions } from '../redux/modules/timesheet'
 import { actions as timecardActions } from '../redux/modules/timecard'
-import styles from './HomeView.scss'
+import { Timecard } from '../components/Timecard'
 
 // We define mapStateToProps where we'd normally use
 // the @connect decorator so the data requirements are clear upfront, but then
@@ -31,7 +31,9 @@ export class TimecardView extends React.Component {
         <h1>Welcome to the React Redux Starter Kit</h1>
         <h2>
           Timecard:&nbsp;
-          <span className={styles['counter--green']}>{JSON.stringify(this.props.timesheet)}</span>
+          <div>
+            <Timecard start={this.props.timesheet.start} end={this.props.timesheet.end} notes={this.props.timesheet.notes} />
+          </div>
         </h2>
         <button className='btn btn-default'
                 onClick={() => this.props.updateTimecard({ start: new Date() })}>
