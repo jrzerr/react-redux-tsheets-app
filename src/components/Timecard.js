@@ -17,10 +17,13 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(Object.assign({}, timesheetActions, timecardActions), dispatch)
 }
 export class Timecard extends React.Component {
-  static propTypes = {
-    start: React.PropTypes.object.isRequired,
-    end: React.PropTypes.object.isRequired,
-    notes: React.PropTypes.string.isRequired
+  constructor (props) {
+    super(props)
+    this.state = {
+      start: props.start,
+      end: props.end,
+      notes: props.notes
+    }
   }
 
   render () {
@@ -41,6 +44,18 @@ export class Timecard extends React.Component {
       </div>
     )
   }
+}
+
+Timecard.propTypes = {
+  start: React.PropTypes.object,
+  end: React.PropTypes.object,
+  notes: React.PropTypes.string
+}
+
+Timecard.defaultProps = {
+  start: null,
+  end: null,
+  notes: 'Default note'
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timecard)
