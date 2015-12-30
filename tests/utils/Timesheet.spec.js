@@ -1,4 +1,4 @@
-import { update, clockIn, clockOut } from 'redux/utils/TimesheetUtils'
+import { update, clockIn, clockOut, getInitialTimesheet } from 'redux/utils/TimesheetUtils'
 import { Map, fromJS } from 'immutable'
 
 describe('Timesheet', function() {
@@ -28,11 +28,12 @@ describe('Timesheet', function() {
       id: '123abc',
       start: undefined,
       end: undefined,
-      notes: ''
+      notes: '',
+      on_the_clock: false
     })
     const date = new Date()
     const updated_ts = clockIn(initial_ts, date)
-
+    expect(updated_ts.get('on_the_clock')).to.equal(true);
     expect(updated_ts.get('start').getTime()).to.equal(date.getTime())
   })
 
@@ -41,11 +42,13 @@ describe('Timesheet', function() {
       id: '123abc',
       start: new Date(),
       end: undefined,
-      notes: ''
+      notes: '',
+      on_the_clock: true
     })
     const date = new Date()
     const updated_ts = clockOut(initial_ts, date)
 
+    expect(updated_ts.get('on_the_clock')).to.equal(false);
     expect(updated_ts.get('end').getTime()).to.equal(date.getTime())
   })
 

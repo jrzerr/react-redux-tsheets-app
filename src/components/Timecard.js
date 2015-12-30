@@ -1,61 +1,38 @@
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { actions as timesheetActions } from '../redux/modules/timesheet'
-import { actions as timecardActions } from '../redux/modules/timecard'
-
-// We define mapStateToProps where we'd normally use
-// the @connect decorator so the data requirements are clear upfront, but then
-// export the decorated component after the main class definition so
-// the component can be tested w/ and w/o being connected.
-// See: http://rackt.github.io/redux/docs/recipes/WritingTests.html
-const mapStateToProps = (state) => ({
-  start: state.timecard.start,
-  end: state.timecard.end,
-  notes: state.timecard.notes
-})
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(Object.assign({}, timesheetActions, timecardActions), dispatch)
-}
+import React from 'react'
+import { ClockIn } from 'components/ClockIn'
 export class Timecard extends React.Component {
+  static propTypes = {
+    timesheet: React.PropTypes.object.isRequired,
+    onClockIn: React.PropTypes.func.isRequired,
+    onClockOut: React.PropTypes.func.isRequired
+  }
   constructor (props) {
     super(props)
-    this.state = {
-      start: props.start,
-      end: props.end,
-      notes: props.notes
-    }
   }
 
   render () {
+    const { timesheet, onClockIn, onClockOut } = this.props
     return (
       <div className='container text-center'>
-        <div>
-          <span>Start:</span>
-          <span>{ JSON.stringify(this.props.start) }</span>
-        </div>
-        <div>
-          <span>End:</span>
-          <span>{ JSON.stringify(this.props.end) }</span>
-        </div>
-        <div>
-          <span>Notes:</span>
-          <span>{ JSON.stringify(this.props.notes) }</span>
-        </div>
+        <div>Notes: {timesheet.notes}</div>
+        <div>Start: {this._renderTime(timesheet.start)}</div>
+        <div>End: {this._renderTime(timesheet.end)}</div>
+        <ClockIn 
+          onTheClock={timesheet.on_the_clock}
+          onClockIn={onClockIn}
+          onClockOut={onClockOut}
+          />
       </div>
     )
   }
+
+  _renderTime (time) {
+    if (time instanceof Date) {
+      return time.getTime()
+    } else {
+      return undefined
+    }
+  }
 }
 
-Timecard.propTypes = {
-  start: React.PropTypes.object,
-  end: React.PropTypes.object,
-  notes: React.PropTypes.string
-}
-
-Timecard.defaultProps = {
-  start: null,
-  end: null,
-  notes: 'Default note'
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Timecard)
+export default Timecard

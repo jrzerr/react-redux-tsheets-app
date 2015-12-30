@@ -17,6 +17,8 @@
   },
   "rules": {
     "semi" : [2, "never"],
-    "react-in-jsx-scope": 0
+    "react-in-jsx-scope": 0,
+    "no-unused-vars": 1,
+    "comma-dangle": 0
   }
 }

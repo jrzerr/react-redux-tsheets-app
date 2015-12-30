@@ -38,4 +38,4 @@ export default handleActions({
     return TimesheetUtils.clockOut(state, payload)
   }
 
-}, Map())
+}, TimesheetUtils.getInitialTimesheet())
