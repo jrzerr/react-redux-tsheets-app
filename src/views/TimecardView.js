@@ -19,32 +19,34 @@ const mapDispatchToProps = (dispatch) => {
 export class TimecardView extends React.Component {
   static propTypes = {
     timesheet: React.PropTypes.object.isRequired,
-    setStart: React.PropTypes.func.isRequired,
-    setEnd: React.PropTypes.func.isRequired,
-    setNotes: React.PropTypes.func.isRequired,
+    clockIn: React.PropTypes.func.isRequired,
+    clockOut: React.PropTypes.func.isRequired,
     updateTimecard: React.PropTypes.func.isRequired
   }
 
   render () {
+    const { updateTimecard, timesheet, clockIn, clockOut } = this.props
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
         <h2>
           Timecard:&nbsp;
           <div>
-            <Timecard start={this.props.timesheet.start} end={this.props.timesheet.end} notes={this.props.timesheet.notes} />
+            <Timecard timesheet={timesheet}
+              onClockIn={() => clockIn()}
+              onClockOut={() => clockOut()} />
           </div>
         </h2>
         <button className='btn btn-default'
-                onClick={() => this.props.updateTimecard({ start: new Date() })}>
+                onClick={() => updateTimecard({ start: new Date() })}>
           Set Start to Now
         </button>
         <button className='btn btn-default'
-                onClick={() => this.props.updateTimecard({ end: new Date() })}>
+                onClick={() => updateTimecard({ end: new Date() })}>
           Set End to Now
         </button>
         <button className='btn btn-default'
-                onClick={() => this.props.updateTimecard({ notes: 'These are some new notes' })}>
+                onClick={() => updateTimecard({ notes: 'These are some new notes' })}>
           Set Notes
         </button>
         <hr />
