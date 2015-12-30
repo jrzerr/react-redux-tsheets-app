@@ -1,5 +1,4 @@
 import { createAction, handleActions } from 'redux-actions'
-import { Map } from 'immutable'
 import * as TimesheetUtils from 'redux/utils/TimesheetUtils'
 import * as APIMethods from 'redux/utils/APIMethods'
 import * as AccessToken from 'redux/utils/AccessTokenUtils'
@@ -43,4 +42,4 @@ export default handleActions({
     return TimesheetUtils.clockOut(state, payload)
   }
 
-}, Map())
+}, TimesheetUtils.getInitialTimesheet())
