@@ -13,10 +13,10 @@ export class ClockIn extends React.Component {
   render () {
     const { onTheClock, onClockIn, onClockOut } = this.props
     var clockInButton
-    if(onTheClock) {
-      clockInButton = <button onClick={onClockOut}>Clock Out</button> 
+    if (onTheClock) {
+      clockInButton = <button onClick={onClockOut}>Clock Out</button>
     } else {
-      clockInButton = <button onClick={onClockIn}>Clock In</button> 
+      clockInButton = <button onClick={onClockIn}>Clock In</button>
     }
     return (
       <div className=''>

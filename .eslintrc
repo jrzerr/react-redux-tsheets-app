@@ -19,6 +19,7 @@
     "semi" : [2, "never"],
     "react-in-jsx-scope": 0,
     "no-unused-vars": 1,
-    "comma-dangle": 0
+    "comma-dangle": 0,
+    "no-trailing-spaces": 0
   }
 }

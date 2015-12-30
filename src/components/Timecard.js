@@ -17,7 +17,7 @@ export class Timecard extends React.Component {
         <div>Notes: {timesheet.notes}</div>
         <div>Start: {this._renderTime(timesheet.start)}</div>
         <div>End: {this._renderTime(timesheet.end)}</div>
-        <ClockIn 
+        <ClockIn
           onTheClock={timesheet.on_the_clock}
           onClockIn={onClockIn}
           onClockOut={onClockOut}
