@@ -20,9 +20,11 @@ export class Jobcode extends React.Component {
         <select onChange={(event) => this._change(event)} value={currentId}>
           <option value=''></option>
           {jobcodeIds.map((id) => {
-            return (
-                <option key={id} value={id}>{jobcodes[id].name}</option>
-              )
+            if (jobcodes[id].parent_id === parentId) {
+              return (
+                  <option key={id} value={id}>{jobcodes[id].name}</option>
+                )
+            }
           })}
         </select>
       </div>

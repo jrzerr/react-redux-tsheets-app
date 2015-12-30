@@ -22,6 +22,11 @@ export function getInitialJobcodes () {
         id: '002',
         parent_id: '0',
         name: 'Jobcode 2'
+      },
+      '003': {
+        id: '003',
+        parent_id: '002',
+        name: 'Jobcode 2'
       }
     },
   })
