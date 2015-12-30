@@ -9,6 +9,7 @@ export function getInitialTimesheet () {
     date: null,
     start: null,
     end: null,
+    jobcode: ''
   })
 }
 

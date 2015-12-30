@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { actions as timesheetActions } from '../redux/modules/timesheet'
 import { actions as timecardActions } from '../redux/modules/timecard'
+import { actions as jobcodeActions } from '../redux/modules/jobcodes'
 import { Timecard } from '../components/Timecard'
 
 // We define mapStateToProps where we'd normally use
@@ -11,21 +12,23 @@ import { Timecard } from '../components/Timecard'
 // the component can be tested w/ and w/o being connected.
 // See: http://rackt.github.io/redux/docs/recipes/WritingTests.html
 const mapStateToProps = (state) => ({
-  timesheet: state.timecard.toJS()
+  timesheet: state.timecard.toJS(),
+  jobcodes: state.jobcodes.toJS()
 })
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(Object.assign({}, timesheetActions, timecardActions), dispatch)
+  return bindActionCreators(Object.assign({}, timesheetActions, timecardActions, jobcodeActions), dispatch)
 }
 export class TimecardView extends React.Component {
   static propTypes = {
     timesheet: React.PropTypes.object.isRequired,
     clockIn: React.PropTypes.func.isRequired,
     clockOut: React.PropTypes.func.isRequired,
-    updateTimecard: React.PropTypes.func.isRequired
+    updateTimecard: React.PropTypes.func.isRequired,
+    jobcodes: React.PropTypes.object.isRequired
   }
 
   render () {
-    const { updateTimecard, timesheet, clockIn, clockOut } = this.props
+    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes } = this.props
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
@@ -34,7 +37,10 @@ export class TimecardView extends React.Component {
           <div>
             <Timecard timesheet={timesheet}
               onClockIn={() => clockIn()}
-              onClockOut={() => clockOut()} />
+              onClockOut={() => clockOut()}
+              jobcodes={jobcodes.list}
+              parentId={jobcodes.parent_ids.timecard}
+              onChangeJobcode={(id) => updateTimecard({ jobcode: id })} />
           </div>
         </h2>
         <button className='btn btn-default'
