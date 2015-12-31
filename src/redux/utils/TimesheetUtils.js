@@ -12,7 +12,7 @@ export function getInitialTimesheet () {
     date: null,
     start: null,
     end: null,
-    jobcode_id: '',
+    jobcode_id: 0,
     user_id: user_id,
     customfields: {
       // $$$ may need to specify your own here

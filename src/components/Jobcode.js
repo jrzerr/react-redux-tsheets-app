@@ -6,10 +6,10 @@ import { isParent } from 'redux/utils/JobcodeUtils'
 export class Jobcode extends React.Component {
   static propTypes = {
     jobcodes: React.PropTypes.instanceOf(OrderedMap).isRequired,
-    parentId: React.PropTypes.string.isRequired,
+    parentId: React.PropTypes.number.isRequired,
     onChange: React.PropTypes.func.isRequired,
     onChangeParent: React.PropTypes.func.isRequired,
-    currentId: React.PropTypes.string.isRequired
+    currentId: React.PropTypes.number.isRequired
   }
   constructor (props) {
     super(props)

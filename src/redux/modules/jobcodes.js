@@ -13,7 +13,7 @@ export const UPDATE_PARENT_IDS = 'UPDATE_PARENT_IDS'
 // ------------------------------------
 // Actions
 // ------------------------------------
-export const updateParentIds = createAction(UPDATE_PARENT_IDS, (value = '0') => value)
+export const updateParentIds = createAction(UPDATE_PARENT_IDS, (value = 0) => value)
 
 export const setJobcodes = createAction(SET_JOBCODES, value => value)
 
@@ -22,6 +22,7 @@ export const getJobcodes = () => {
     var jobcodeOptions = {}
     JobcodeResource.get(jobcodeOptions).then(function (jsondata) {
       dispatch(setJobcodes(jsondata))
+      dispatch(updateParentIds(JobcodeUtils.getInitialJobcodeParentIds()))
     })
   }
 }

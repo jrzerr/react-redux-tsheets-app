@@ -9,7 +9,7 @@ export class Timecard extends React.Component {
     onClockIn: React.PropTypes.func.isRequired,
     onClockOut: React.PropTypes.func.isRequired,
     jobcodes: React.PropTypes.instanceOf(OrderedMap).isRequired,
-    parentId: React.PropTypes.string.isRequired,
+    parentId: React.PropTypes.number.isRequired,
     onChangeJobcode: React.PropTypes.func.isRequired,
     onChangeJobcodeParent: React.PropTypes.func.isRequired
   }

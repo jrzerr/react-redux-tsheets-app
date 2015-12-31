@@ -45,9 +45,11 @@ export class TimecardView extends React.Component {
               parentId={jobcodes.getIn(['parent_ids', 'timecard'])}
               onChangeJobcode={(id) => {
                 updateTimecard({ jobcode_id: id })
-                updateParentIds({ timecard: '0' })
+                updateParentIds({ timecard: 0 })
               }}
-              onChangeJobcodeParent={(id) => updateParentIds({ timecard: id })} />
+              onChangeJobcodeParent={(id) => {
+                updateParentIds({ timecard: parseInt(id, 10) })
+              } }/>
           </div>
         </h2>
         <button className='btn btn-default'
