@@ -19,6 +19,7 @@ export const increment = createAction(COUNTER_INCREMENT, (value = 1) => value)
 export const doubleAsync = () => {
   return (dispatch, getState) => {
     setTimeout(() => {
+      console.log(increment(1))
       dispatch(increment(getState().counter))
     }, 1000)
   }

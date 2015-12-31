@@ -25,11 +25,12 @@ export class TimecardView extends React.Component {
     clockIn: React.PropTypes.func.isRequired,
     clockOut: React.PropTypes.func.isRequired,
     updateTimecard: React.PropTypes.func.isRequired,
+    updateParentIds: React.PropTypes.func.isRequired,
     jobcodes: React.PropTypes.instanceOf(Map).isRequired
   }
 
   render () {
-    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes } = this.props
+    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, updateParentIds } = this.props
 
     return (
       <div className='container text-center'>
@@ -42,7 +43,11 @@ export class TimecardView extends React.Component {
               onClockOut={() => clockOut()}
               jobcodes={jobcodes.get('list')}
               parentId={jobcodes.getIn(['parent_ids', 'timecard'])}
-              onChangeJobcode={(id) => updateTimecard({ jobcode: id })} />
+              onChangeJobcode={(id) => {
+                updateTimecard({ jobcode: id })
+                updateParentIds({ timecard: '0' })
+              }}
+              onChangeJobcodeParent={(id) => updateParentIds({ timecard: id })} />
           </div>
         </h2>
         <button className='btn btn-default'

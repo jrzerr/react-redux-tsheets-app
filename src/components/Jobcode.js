@@ -1,12 +1,14 @@
 import React from 'react'
 import { ManagedList } from 'components/ManagedList'
 import { OrderedMap } from 'immutable'
+import { isParent } from 'redux/utils/JobcodeUtils'
 
 export class Jobcode extends React.Component {
   static propTypes = {
     jobcodes: React.PropTypes.instanceOf(OrderedMap).isRequired,
     parentId: React.PropTypes.string.isRequired,
     onChange: React.PropTypes.func.isRequired,
+    onChangeParent: React.PropTypes.func.isRequired,
     currentId: React.PropTypes.string.isRequired
   }
   constructor (props) {
@@ -14,14 +16,17 @@ export class Jobcode extends React.Component {
   }
 
   render () {
-    const { jobcodes, parentId, currentId, onChange } = this.props
+    const { jobcodes, parentId, currentId, onChange, onChangeParent } = this.props
     return (
       <div className=''>
        <ManagedList
-          list={jobcodes.filter((v) => v.get('parent_id') === parentId)}
+          list={jobcodes}
           currentId={currentId}
-          onSelect={onChange}
+          onChange={onChange}
+          onChangeParent={onChangeParent}
           parentId={parentId}
+          isSelected={isParent}
+
         />
       </div>
     )

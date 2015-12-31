@@ -10,7 +10,8 @@ export class Timecard extends React.Component {
     onClockOut: React.PropTypes.func.isRequired,
     jobcodes: React.PropTypes.instanceOf(OrderedMap).isRequired,
     parentId: React.PropTypes.string.isRequired,
-    onChangeJobcode: React.PropTypes.func.isRequired
+    onChangeJobcode: React.PropTypes.func.isRequired,
+    onChangeJobcodeParent: React.PropTypes.func.isRequired
   }
   constructor (props) {
     super(props)
@@ -23,7 +24,8 @@ export class Timecard extends React.Component {
       onClockOut,
       jobcodes,
       parentId,
-      onChangeJobcode 
+      onChangeJobcode,
+      onChangeJobcodeParent
     } = this.props
 
     return (
@@ -35,6 +37,7 @@ export class Timecard extends React.Component {
           jobcodes={jobcodes}
           parentId={parentId}
           onChange={onChangeJobcode}
+          onChangeParent={onChangeJobcodeParent}
           currentId={timesheet.jobcode}
         />
         <ClockIn
