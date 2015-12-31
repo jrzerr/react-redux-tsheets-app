@@ -1,14 +1,17 @@
 import React from 'react'
 import { ClockIn } from 'components/ClockIn'
 import { Jobcode } from 'components/Jobcode'
+import { OrderedMap } from 'immutable'
+
 export class Timecard extends React.Component {
   static propTypes = {
     timesheet: React.PropTypes.object.isRequired,
     onClockIn: React.PropTypes.func.isRequired,
     onClockOut: React.PropTypes.func.isRequired,
-    jobcodes: React.PropTypes.object.isRequired,
+    jobcodes: React.PropTypes.instanceOf(OrderedMap).isRequired,
     parentId: React.PropTypes.string.isRequired,
-    onChangeJobcode: React.PropTypes.func.isRequired
+    onChangeJobcode: React.PropTypes.func.isRequired,
+    onChangeJobcodeParent: React.PropTypes.func.isRequired
   }
   constructor (props) {
     super(props)
@@ -21,7 +24,8 @@ export class Timecard extends React.Component {
       onClockOut,
       jobcodes,
       parentId,
-      onChangeJobcode
+      onChangeJobcode,
+      onChangeJobcodeParent
     } = this.props
 
     return (
@@ -33,6 +37,7 @@ export class Timecard extends React.Component {
           jobcodes={jobcodes}
           parentId={parentId}
           onChange={onChangeJobcode}
+          onChangeParent={onChangeJobcodeParent}
           currentId={timesheet.jobcode_id}
         />
         <ClockIn
