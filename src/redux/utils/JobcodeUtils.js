@@ -31,3 +31,9 @@ export function getInitialJobcodes () {
     },
   })
 }
+
+export function set (jobcodes, newJobcodes) {
+  console.log('in JobcodeUtils.set')
+  console.log(newJobcodes)
+  return jobcodes.set('list', fromJS(newJobcodes).toOrderedMap())
+}

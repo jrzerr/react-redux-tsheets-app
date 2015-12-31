@@ -1,7 +1,6 @@
 import { createAction, handleActions } from 'redux-actions'
 import * as TimesheetUtils from 'redux/utils/TimesheetUtils'
-import * as APIMethods from 'redux/utils/APIMethods'
-import * as AccessToken from 'redux/utils/AccessTokenUtils'
+import * as TimesheetResource from 'redux/utils/TimesheetResource'
 
 // ------------------------------------
 // Constants
@@ -31,26 +30,16 @@ export const clockOut = (value = new Date()) => {
 
 export const syncTimesheet = (timesheet) => {
   return (dispatch, getState) => {
-    var syncParams = {
-      'data': [
-        TimesheetUtils.toApiMapper(timesheet)
-      ]
-    }
-
     // Can only clock in a timesheet that does not exist on the server
     if (timesheet.get('id') === null) {
       // POST a new one
-      APIMethods.post('timesheets', AccessToken.get(), syncParams).then(function (response) {
-        return response.json()
-      }).then(function (jsondata) {
-        dispatch(updateTimecard({ id: jsondata.results.timesheets['1'].id }))
+      TimesheetResource.post(timesheet).then(function (jsondata) {
+        dispatch(updateTimecard({ id: jsondata['1'].id }))
       })
     } else {
-      // PUT a new one
-      APIMethods.put('timesheets', AccessToken.get(), syncParams).then(function (response) {
-        return response.json()
-      }).then(function (jsondata) {
-        // dispatch(updateTimecard({ id: jsondata.results.timesheets["1"].id }))
+      // PUT an existing one
+      TimesheetResource.put(timesheet).then(function (jsondata) {
+        // dispatch(updateTimecard({ id: jsondata['1'].id }))
       })
     }
   }

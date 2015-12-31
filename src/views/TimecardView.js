@@ -24,11 +24,12 @@ export class TimecardView extends React.Component {
     clockIn: React.PropTypes.func.isRequired,
     clockOut: React.PropTypes.func.isRequired,
     updateTimecard: React.PropTypes.func.isRequired,
-    jobcodes: React.PropTypes.object.isRequired
+    jobcodes: React.PropTypes.object.isRequired,
+    getJobcodes: React.PropTypes.func.isRequired
   }
 
   render () {
-    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes } = this.props
+    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, getJobcodes } = this.props
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
@@ -54,6 +55,10 @@ export class TimecardView extends React.Component {
         <button className='btn btn-default'
                 onClick={() => updateTimecard({ notes: 'These are some new notes' })}>
           Set Notes
+        </button>
+        <button className='btn btn-default'
+                onClick={() => getJobcodes()}>
+          Fetch Jobcodes
         </button>
         <hr />
         <Link to='/about'>Go To About View</Link>
