@@ -40,7 +40,7 @@ export class TimecardView extends React.Component {
               onClockOut={() => clockOut()}
               jobcodes={jobcodes.list}
               parentId={jobcodes.parent_ids.timecard}
-              onChangeJobcode={(id) => updateTimecard({ jobcode: id })} />
+              onChangeJobcode={(id) => updateTimecard({ jobcode_id: id })} />
           </div>
         </h2>
         <button className='btn btn-default'

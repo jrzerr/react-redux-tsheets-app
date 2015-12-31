@@ -11,7 +11,8 @@ const config = {
 
   // TSheets API
   tsheets_apiroot: 'https://rest.tsheets.com/api/v1',
-  tsheets_apitoken: ''
+  tsheets_apitoken: '',
+  tsheets_user_id: 0
 
 }
 
