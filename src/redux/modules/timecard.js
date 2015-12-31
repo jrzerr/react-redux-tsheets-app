@@ -14,13 +14,53 @@ export const CLOCK_OUT = 'CLOCK_OUT'
 // Actions
 // ------------------------------------
 export const updateTimecard = createAction(UPDATE_TIMECARD, value => value)
-export const clockIn = createAction(CLOCK_IN, (value = new Date()) => value)
-export const clockOut = createAction(CLOCK_OUT, (value = new Date()) => value)
+
+export const clockIn = (value = new Date()) => {
+  return (dispatch, getState) => {
+    dispatch({ type: CLOCK_IN, payload: value })
+    dispatch(syncTimesheet(getState().timecard))
+  }
+}
+
+export const clockOut = (value = new Date()) => {
+  return (dispatch, getState) => {
+    dispatch({ type: CLOCK_OUT, payload: value })
+    dispatch(syncTimesheet(getState().timecard))
+  }
+}
+
+export const syncTimesheet = (timesheet) => {
+  return (dispatch, getState) => {
+    var syncParams = {
+      'data': [
+        TimesheetUtils.toApiMapper(timesheet)
+      ]
+    }
+
+    // Can only clock in a timesheet that does not exist on the server
+    if (timesheet.get('id') === null) {
+      // POST a new one
+      APIMethods.post('timesheets', AccessToken.get(), syncParams).then(function (response) {
+        return response.json()
+      }).then(function (jsondata) {
+        dispatch(updateTimecard({ id: jsondata.results.timesheets['1'].id }))
+      })
+    } else {
+      // PUT a new one
+      APIMethods.put('timesheets', AccessToken.get(), syncParams).then(function (response) {
+        return response.json()
+      }).then(function (jsondata) {
+        // dispatch(updateTimecard({ id: jsondata.results.timesheets["1"].id }))
+      })
+    }
+  }
+}
 
 export const actions = {
   updateTimecard,
   clockIn,
-  clockOut
+  clockOut,
+  syncTimesheet
 }
 
 // ------------------------------------
@@ -28,9 +68,6 @@ export const actions = {
 // ------------------------------------
 export default handleActions({
   UPDATE_TIMECARD: (state, { payload }) => {
-    APIMethods.get('timesheets', AccessToken.get(), 'start_date=2015-12-01&end_date=2015-12-25').then(function (response) {
-      console.log(response)
-    })
     return TimesheetUtils.update(state, payload)
   },
 

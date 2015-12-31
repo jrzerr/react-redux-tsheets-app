@@ -18,7 +18,7 @@ export class Timecard extends React.Component {
   }
 
   render () {
-    const { 
+    const {
       timesheet,
       onClockIn,
       onClockOut,
@@ -38,7 +38,7 @@ export class Timecard extends React.Component {
           parentId={parentId}
           onChange={onChangeJobcode}
           onChangeParent={onChangeJobcodeParent}
-          currentId={timesheet.jobcode}
+          currentId={timesheet.jobcode_id}
         />
         <ClockIn
           onTheClock={timesheet.on_the_clock}

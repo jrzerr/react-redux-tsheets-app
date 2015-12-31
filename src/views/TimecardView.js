@@ -44,7 +44,7 @@ export class TimecardView extends React.Component {
               jobcodes={jobcodes.get('list')}
               parentId={jobcodes.getIn(['parent_ids', 'timecard'])}
               onChangeJobcode={(id) => {
-                updateTimecard({ jobcode: id })
+                updateTimecard({ jobcode_id: id })
                 updateParentIds({ timecard: '0' })
               }}
               onChangeJobcodeParent={(id) => updateParentIds({ timecard: id })} />
