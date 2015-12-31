@@ -26,12 +26,12 @@ export class TimecardView extends React.Component {
     clockOut: React.PropTypes.func.isRequired,
     updateTimecard: React.PropTypes.func.isRequired,
     updateParentIds: React.PropTypes.func.isRequired,
-    jobcodes: React.PropTypes.instanceOf(Map).isRequired
+    jobcodes: React.PropTypes.instanceOf(Map).isRequired,
+    getJobcodes: React.PropTypes.func.isRequired
   }
 
   render () {
-    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, updateParentIds } = this.props
-
+    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, getJobcodes, updateParentIds } = this.props
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
@@ -45,9 +45,11 @@ export class TimecardView extends React.Component {
               parentId={jobcodes.getIn(['parent_ids', 'timecard'])}
               onChangeJobcode={(id) => {
                 updateTimecard({ jobcode_id: id })
-                updateParentIds({ timecard: '0' })
+                updateParentIds({ timecard: 0 })
               }}
-              onChangeJobcodeParent={(id) => updateParentIds({ timecard: id })} />
+              onChangeJobcodeParent={(id) => {
+                updateParentIds({ timecard: parseInt(id, 10) })
+              } }/>
           </div>
         </h2>
         <button className='btn btn-default'
@@ -61,6 +63,10 @@ export class TimecardView extends React.Component {
         <button className='btn btn-default'
                 onClick={() => updateTimecard({ notes: 'These are some new notes' })}>
           Set Notes
+        </button>
+        <button className='btn btn-default'
+                onClick={() => getJobcodes()}>
+          Fetch Jobcodes
         </button>
         <hr />
         <Link to='/about'>Go To About View</Link>

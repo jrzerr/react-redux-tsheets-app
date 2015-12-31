@@ -21,8 +21,8 @@ export function _isSelected (parent, child, list) {
 export class ManagedList extends React.Component {
   static propTypes = {
     list: React.PropTypes.instanceOf(OrderedMap).isRequired,
-    currentId: React.PropTypes.string.isRequired,
-    parentId: React.PropTypes.string.isRequired,
+    currentId: React.PropTypes.number.isRequired,
+    parentId: React.PropTypes.number.isRequired,
     onChange: React.PropTypes.func.isRequired,
     onChangeParent: React.PropTypes.func,
     buttonStyle: React.PropTypes.object,
@@ -67,10 +67,10 @@ export class ManagedList extends React.Component {
             content += ' >'
           }
           return (
-              <button 
-                key={key} 
+              <button
+                key={key}
                 style={s}
-                onClick={() => this._handleSelect(value, key)}>{content}</button>
+                onClick={() => this._handleSelect(value, parseInt(key, 10))}>{content}</button>
             )
         }).toArray()}
       </div>
