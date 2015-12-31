@@ -30,6 +30,11 @@ export class TimecardView extends React.Component {
     getJobcodes: React.PropTypes.func.isRequired
   }
 
+  componentDidMount () {
+    const { getJobcodes } = this.props
+    getJobcodes()
+  }
+
   render () {
     const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, getJobcodes, updateParentIds } = this.props
     return (
