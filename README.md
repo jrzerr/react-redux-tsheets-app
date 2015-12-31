@@ -1,3 +1,40 @@
+Additions to the React Redux Starter Kit
+========================================
+
+* Added a local configuration for the client application in src/config
+  * Copy src/config/_local.sample.js to src/config/_local.js and override any configuration options that you see in the src/config/_base.js
+
+* Due to the TSheets API not supporting CORS, added CORS support via creating a CORS proxy with nginx
+  * Installed nginx on Mac OS X using homebrew:
+    * `brew tap homebrew/nginx`
+    * `brew install nginx-full --with-headers-more-module`
+  * Most of the instructions for this method were adapted from [nginx as a CORS-enabled HTTPS proxy](http://blog.themillhousegroup.com/2013/05/nginx-as-cors-enabled-https-proxy.html)
+  * Edit `/usr/local/etc/nginx/nginx.conf` to add the proxy, roughly:
+
+```
+  # Make sure you specify all the methods and Headers
+  # you send with any request!
+  more_set_headers 'Access-Control-Allow-Origin: *';
+  more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE';
+  more_set_headers 'Access-Control-Allow-Credentials: true';
+  more_set_headers 'Access-Control-Allow-Headers: Origin,Content-Type,Accept,Authorization';
+
+  location / {
+          # Handle a CORS preflight OPTIONS request
+          # without passing it through to the proxied server
+          if ($request_method = OPTIONS ) {
+                  add_header Content-Length 0;
+                  add_header Content-Type text/plain;
+                  return 204;
+          }
+          proxy_pass https://rest.tsheets.com/;
+  }
+```
+
+  * Then whatever port your server is on, go into your `src/config/_local.js` and override the `tsheets_apiroot` to be your localhost, something like: `http://localhost:8080/api/v1`.
+  * Start nginx by doing `nginx` (sudo if necessary)
+  * Stop nginx doing `nginx -s stop`
+
 React Redux Starter Kit
 =======================
 

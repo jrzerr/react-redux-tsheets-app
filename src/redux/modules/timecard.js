@@ -28,9 +28,6 @@ export const actions = {
 // ------------------------------------
 export default handleActions({
   UPDATE_TIMECARD: (state, { payload }) => {
-    APIMethods.get('timesheets', AccessToken.get(), 'start_date=2015-12-01&end_date=2015-12-25').then(function (response) {
-      console.log(response)
-    })
     return TimesheetUtils.update(state, payload)
   },
 
