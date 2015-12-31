@@ -1,8 +1,10 @@
 import React from 'react'
+import { ManagedList } from 'components/ManagedList'
+import { OrderedMap } from 'immutable'
 
 export class Jobcode extends React.Component {
   static propTypes = {
-    jobcodes: React.PropTypes.object.isRequired,
+    jobcodes: React.PropTypes.instanceOf(OrderedMap).isRequired,
     parentId: React.PropTypes.string.isRequired,
     onChange: React.PropTypes.func.isRequired,
     currentId: React.PropTypes.string.isRequired
@@ -12,21 +14,15 @@ export class Jobcode extends React.Component {
   }
 
   render () {
-    const { jobcodes, parentId, currentId } = this.props
-    console.log(currentId)
-    const jobcodeIds = Object.keys(jobcodes)
+    const { jobcodes, parentId, currentId, onChange } = this.props
     return (
       <div className=''>
-        <select onChange={(event) => this._change(event)} value={currentId}>
-          <option value=''></option>
-          {jobcodeIds.map((id) => {
-            if (jobcodes[id].parent_id === parentId) {
-              return (
-                  <option key={id} value={id}>{jobcodes[id].name}</option>
-                )
-            }
-          })}
-        </select>
+       <ManagedList
+          list={jobcodes.filter((v) => v.get('parent_id') === parentId)}
+          currentId={currentId}
+          onSelect={onChange}
+          parentId={parentId}
+        />
       </div>
     )
   }

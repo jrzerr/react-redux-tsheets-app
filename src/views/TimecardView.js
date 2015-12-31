@@ -5,6 +5,7 @@ import { actions as timesheetActions } from '../redux/modules/timesheet'
 import { actions as timecardActions } from '../redux/modules/timecard'
 import { actions as jobcodeActions } from '../redux/modules/jobcodes'
 import { Timecard } from '../components/Timecard'
+import { Map } from 'immutable'
 
 // We define mapStateToProps where we'd normally use
 // the @connect decorator so the data requirements are clear upfront, but then
@@ -12,34 +13,35 @@ import { Timecard } from '../components/Timecard'
 // the component can be tested w/ and w/o being connected.
 // See: http://rackt.github.io/redux/docs/recipes/WritingTests.html
 const mapStateToProps = (state) => ({
-  timesheet: state.timecard.toJS(),
-  jobcodes: state.jobcodes.toJS()
+  timesheet: state.timecard,
+  jobcodes: state.jobcodes
 })
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(Object.assign({}, timesheetActions, timecardActions, jobcodeActions), dispatch)
 }
 export class TimecardView extends React.Component {
   static propTypes = {
-    timesheet: React.PropTypes.object.isRequired,
+    timesheet: React.PropTypes.instanceOf(Map).isRequired,
     clockIn: React.PropTypes.func.isRequired,
     clockOut: React.PropTypes.func.isRequired,
     updateTimecard: React.PropTypes.func.isRequired,
-    jobcodes: React.PropTypes.object.isRequired
+    jobcodes: React.PropTypes.instanceOf(Map).isRequired
   }
 
   render () {
     const { updateTimecard, timesheet, clockIn, clockOut, jobcodes } = this.props
+
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
         <h2>
           Timecard:&nbsp;
           <div>
-            <Timecard timesheet={timesheet}
+            <Timecard timesheet={timesheet.toJS()}
               onClockIn={() => clockIn()}
               onClockOut={() => clockOut()}
-              jobcodes={jobcodes.list}
-              parentId={jobcodes.parent_ids.timecard}
+              jobcodes={jobcodes.get('list')}
+              parentId={jobcodes.getIn(['parent_ids', 'timecard'])}
               onChangeJobcode={(id) => updateTimecard({ jobcode: id })} />
           </div>
         </h2>
