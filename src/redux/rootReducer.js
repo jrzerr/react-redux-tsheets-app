@@ -1,14 +1,16 @@
 import { combineReducers } from 'redux'
 import { routeReducer as router } from 'redux-simple-router'
-import counter from './modules/counter'
-import timesheet from './modules/timesheet'
-import timecard from './modules/timecard'
-import jobcodes from './modules/jobcodes'
+import counter from 'redux/modules/counter'
+import timesheet from 'redux/modules/timesheet'
+import timecard from 'redux/modules/timecard'
+import jobcodes from 'redux/modules/jobcodes'
+import timesheetList from 'redux/modules/timesheetList'
 
 export default combineReducers({
   counter,
   timesheet,
   timecard,
   jobcodes,
+  timesheetList,
   router
 })

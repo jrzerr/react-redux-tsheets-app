@@ -6,6 +6,7 @@ export function getInitialTimesheet () {
   var user_id = config.tsheets_user_id
   return fromJS({
     id: null,
+    _id: null,
     notes: '',
     type: 'regular',
     on_the_clock: false,

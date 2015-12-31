@@ -1,10 +1,11 @@
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { actions as timesheetActions } from '../redux/modules/timesheet'
-import { actions as timecardActions } from '../redux/modules/timecard'
-import { actions as jobcodeActions } from '../redux/modules/jobcodes'
-import { Timecard } from '../components/Timecard'
+import { actions as timesheetActions } from 'redux/modules/timesheet'
+import { actions as timecardActions } from 'redux/modules/timecard'
+import { actions as jobcodeActions } from 'redux/modules/jobcodes'
+import { Timecard } from 'components/Timecard'
+import { getInitialTimesheet } from 'redux/utils/TimesheetUtils'
 import { Map } from 'immutable'
 
 // We define mapStateToProps where we'd normally use
@@ -12,10 +13,19 @@ import { Map } from 'immutable'
 // export the decorated component after the main class definition so
 // the component can be tested w/ and w/o being connected.
 // See: http://rackt.github.io/redux/docs/recipes/WritingTests.html
-const mapStateToProps = (state) => ({
-  timesheet: state.timecard,
-  jobcodes: state.jobcodes
-})
+const mapStateToProps = (state) => {
+  var timesheet
+  if (!state.timecard.get('_id')) {
+    // create blank timesheet
+    timesheet = getInitialTimesheet()
+  } else {
+    timesheet = state.timesheetList.get(state.timecard.get('_id')) 
+  }
+  return {
+    timesheet: timesheet,
+    jobcodes: state.jobcodes
+  }
+}
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators(Object.assign({}, timesheetActions, timecardActions, jobcodeActions), dispatch)
 }
