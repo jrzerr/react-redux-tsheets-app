@@ -1,7 +1,7 @@
 {
-  "name": "react-redux-starter-kit",
+  "name": "react-redux-tsheets-app",
   "version": "1.0.0",
-  "description": "Get started with React, Redux, and React-Router!",
+  "description": "A TSheets time tracking app with React, Redux, and React-Router!",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
