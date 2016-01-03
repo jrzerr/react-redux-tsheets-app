@@ -17,14 +17,18 @@ export const updateTimecard = createAction(UPDATE_TIMECARD, value => value)
 export const clockIn = (value = new Date()) => {
   return (dispatch, getState) => {
     dispatch({ type: CLOCK_IN, payload: value })
-    dispatch(syncTimesheet(getState().timecard))
+    return dispatch(syncTimesheet(getState().timecard)).then(() => {
+      console.log('clock in syncTimesheet done in clock in ac')
+    })
   }
 }
 
 export const clockOut = (value = new Date()) => {
   return (dispatch, getState) => {
     dispatch({ type: CLOCK_OUT, payload: value })
-    dispatch(syncTimesheet(getState().timecard))
+    return dispatch(syncTimesheet(getState().timecard)).then(() => {
+      console.log('clock out syncTimesheet done in clock out ac')
+    })
   }
 }
 
@@ -33,14 +37,15 @@ export const syncTimesheet = (timesheet) => {
     // Can only clock in a timesheet that does not exist on the server
     if (timesheet.get('id') === null) {
       // POST a new one
-      TimesheetResource.post(timesheet).then(function (jsondata) {
+      return TimesheetResource.post(timesheet).then((jsondata) =>
         dispatch(updateTimecard({ id: jsondata['1'].id }))
-      })
+      )
     } else {
       // PUT an existing one
-      TimesheetResource.put(timesheet).then(function (jsondata) {
+      return TimesheetResource.put(timesheet).then((jsondata) =>
         // dispatch(updateTimecard({ id: jsondata['1'].id }))
-      })
+        jsondata
+      )
     }
   }
 }
