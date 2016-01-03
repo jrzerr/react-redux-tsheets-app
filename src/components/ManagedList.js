@@ -9,7 +9,7 @@ var defaultButtonStyle = {
  * One case where the item should be selected:
  * 1) item is the same as the selected item
  * @param  {Map} item - An item that we want to determine if selected
- * @param  {Map} selected - The currently selected item
+ * @param  {Map} current - The current item
  * @param  {OrderedMap} list - The entire map of id and Map item
  * @return {Boolean} - Whether item should be shown as selected
  */
@@ -18,7 +18,7 @@ export function _isSelected (item, selected, list) {
   if (!selected) {
     return false
   } else {
-    // If item passed in is the selected item, it should be marked as selected
+    // If item passed in is the current item, it should be marked as selected
     if (selected.get('id') === item.get('id')) {
       return true
     } else {

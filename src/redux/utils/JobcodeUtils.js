@@ -27,25 +27,25 @@ export function updateParentIds (jobcodes, props) {
 /**
  * We will return whether the item passed in should be marked as selected
  * Two cases where the item should be selected:
- * 1) item is the same as the selected item
- * 2) item is any parent of the currently selected item
+ * 1) item is the same as the current item
+ * 2) item is any parent of the current item
  * @param  {Map} item - An item that we want to determine if selected
- * @param  {Map} selected - The currently selected item
+ * @param  {Map} current - The current item
  * @param  {OrderedMap} list - The entire map of id and Map item
  * @return {Boolean} - Whether item should be shown as selected
  */
-export function isSelected (item, selected, list) {
-  // if no selected item, then nothing should be marked as selected
-  if (!selected) {
+export function isSelected (item, current, list) {
+  // if no current item, then nothing should be marked as selected
+  if (!current) {
     return false
   } else {
-    // If item passed in is the selected item, it should be marked as selected
-    if (selected.get('id') === item.get('id')) {
+    // If item passed in is the current item, it should be marked as selected
+    if (current.get('id') === item.get('id')) {
       return true
-    } else if (!selected.get('parent_id')) { // if selected has no parent, no search
+    } else if (!current.get('parent_id')) { // if current has no parent, no search
       return false
-    } else { // otherwise check selected parent
-      return isSelected(item, list.get(selected.get('parent_id').toString()), list)
+    } else { // otherwise check current item's parent
+      return isSelected(item, list.get(current.get('parent_id').toString()), list)
     }
   }
 }
