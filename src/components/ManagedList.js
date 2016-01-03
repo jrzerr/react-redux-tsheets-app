@@ -52,12 +52,21 @@ export class ManagedList extends React.Component {
     if (!isSelected) {
       isSelected = _isSelected
     }
-    let currentChildItem = list.get(currentId.toString())
+    let currentItem = list.get(currentId.toString())
+    let backButton
+    if (parentId !== 0) {
+      let parentItem = list.get(parentId.toString())
+      let parentItemParentId = parentItem.get('parent_id')
+      backButton = <button key={parentId + 'back'} style={style} onClick={() => this._handleBack(parentItemParentId)}> &lt;</button>
+    } else {
+      backButton = ''
+    }
     return (
       <div className=''>
+        {backButton}
         {list.filter((v) => v.get('parent_id') === parentId).map((value, key) => {
           var s
-          if (isSelected(value, currentChildItem, list)) {
+          if (isSelected(value, currentItem, list)) {
             s = selectedStyle
           } else {
             s = style
@@ -82,6 +91,12 @@ export class ManagedList extends React.Component {
       this.props.onChangeParent(key)
     } else {
       this.props.onChange(key)
+    }
+  }
+
+  _handleBack (parentId) {
+    if (this.props.onChangeParent) {
+      this.props.onChangeParent(parentId)
     }
   }
 }
