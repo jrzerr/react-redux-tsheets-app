@@ -4,16 +4,25 @@ var defaultButtonStyle = {
   display: 'block'
 }
 
-export function _isSelected (parent, child, list) {
-  if (!child) {
+/**
+ * We will return whether the item passed in should be marked as selected
+ * One case where the item should be selected:
+ * 1) item is the same as the selected item
+ * @param  {Map} item - An item that we want to determine if selected
+ * @param  {Map} selected - The currently selected item
+ * @param  {OrderedMap} list - The entire map of id and Map item
+ * @return {Boolean} - Whether item should be shown as selected
+ */
+export function _isSelected (item, selected, list) {
+  // if no selected item, then nothing should be marked as selected
+  if (!selected) {
     return false
   } else {
-    if (child.get('id') === parent.get('id')) {
+    // If item passed in is the selected item, it should be marked as selected
+    if (selected.get('id') === item.get('id')) {
       return true
-    } else if (!child.get('parent_id')) {
-      return false
     } else {
-      return _isSelected(parent, list.get(child.get('parent_id')), list)
+      return false
     }
   }
 }

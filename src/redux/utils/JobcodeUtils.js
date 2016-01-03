@@ -24,17 +24,28 @@ export function updateParentIds (jobcodes, props) {
   return jobcodes.mergeDeepIn(['parent_ids'], props)
 }
 
-// check if the parent is a parent of the child
-export function isParent (parent, child, list) {
-  if (!child) {
+/**
+ * We will return whether the item passed in should be marked as selected
+ * Two cases where the item should be selected:
+ * 1) item is the same as the selected item
+ * 2) item is any parent of the currently selected item
+ * @param  {Map} item - An item that we want to determine if selected
+ * @param  {Map} selected - The currently selected item
+ * @param  {OrderedMap} list - The entire map of id and Map item
+ * @return {Boolean} - Whether item should be shown as selected
+ */
+export function isSelected (item, selected, list) {
+  // if no selected item, then nothing should be marked as selected
+  if (!selected) {
     return false
   } else {
-    if (child.get('id') === parent.get('id')) {
+    // If item passed in is the selected item, it should be marked as selected
+    if (selected.get('id') === item.get('id')) {
       return true
-    } else if (!child.get('parent_id')) {
+    } else if (!selected.get('parent_id')) { // if selected has no parent, no search
       return false
-    } else {
-      return isParent(parent, list.get(child.get('parent_id')), list)
+    } else { // otherwise check selected parent
+      return isSelected(item, list.get(selected.get('parent_id').toString()), list)
     }
   }
 }

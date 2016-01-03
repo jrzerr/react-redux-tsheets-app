@@ -1,7 +1,7 @@
 import React from 'react'
 import { ManagedList } from 'components/ManagedList'
 import { OrderedMap } from 'immutable'
-import { isParent } from 'redux/utils/JobcodeUtils'
+import { isSelected } from 'redux/utils/JobcodeUtils'
 
 export class Jobcode extends React.Component {
   static propTypes = {
@@ -25,7 +25,7 @@ export class Jobcode extends React.Component {
           onChange={onChange}
           onChangeParent={onChangeParent}
           parentId={parentId}
-          isSelected={isParent}
+          isSelected={isSelected}
 
         />
       </div>
