@@ -52,12 +52,12 @@ export class ManagedList extends React.Component {
     if (!isSelected) {
       isSelected = _isSelected
     }
+    let currentChildItem = list.get(currentId.toString())
     return (
       <div className=''>
         {list.filter((v) => v.get('parent_id') === parentId).map((value, key) => {
-          var childItem = list.get(currentId)
           var s
-          if (isSelected(value, childItem, list)) {
+          if (isSelected(value, currentChildItem, list)) {
             s = selectedStyle
           } else {
             s = style
