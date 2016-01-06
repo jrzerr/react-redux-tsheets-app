@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import { actions as timesheetActions } from 'redux/modules/timesheet'
 import { actions as timecardActions } from 'redux/modules/timecard'
 import { actions as jobcodeActions } from 'redux/modules/jobcodes'
+import { actions as timesheetListActions } from 'redux/modules/timesheetList'
 import { Timecard } from 'components/Timecard'
 import { getInitialTimesheet } from 'redux/utils/TimesheetUtils'
 import { Map } from 'immutable'
@@ -27,7 +28,7 @@ const mapStateToProps = (state) => {
   }
 }
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(Object.assign({}, timesheetActions, timecardActions, jobcodeActions), dispatch)
+  return bindActionCreators(Object.assign({}, timesheetActions, timecardActions, jobcodeActions, timesheetListActions), dispatch)
 }
 export class TimecardView extends React.Component {
   static propTypes = {
@@ -36,15 +37,17 @@ export class TimecardView extends React.Component {
     clockOut: React.PropTypes.func.isRequired,
     updateTimecard: React.PropTypes.func.isRequired,
     updateParentIds: React.PropTypes.func.isRequired,
-    jobcodes: React.PropTypes.instanceOf(Map).isRequired
+    jobcodes: React.PropTypes.instanceOf(Map).isRequired,
+    syncTimesheets: React.PropTypes.func.isRequired
   }
 
   render () {
-    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, updateParentIds } = this.props
+    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, updateParentIds, syncTimesheets } = this.props
 
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
+        <button onClick={syncTimesheets}>Sync</button>
         <h2>
           Timecard:&nbsp;
           <div>

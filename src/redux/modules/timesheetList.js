@@ -1,6 +1,6 @@
 import { handleActions, createAction } from 'redux-actions'
 import { OrderedMap } from 'immutable'
-import { getInitialTimesheet, toApiMapper } from 'redux/utils/TimesheetUtils'
+import { getInitialTimesheet, toApiMapper, fromApiMapper } from 'redux/utils/TimesheetUtils'
 import * as APIMethods from 'redux/utils/APIMethods'
 import * as AccessToken from 'redux/utils/AccessTokenUtils'
 // ------------------------------------
@@ -28,35 +28,45 @@ export const updateTimesheet = createAction(UPDATE_TIMESHEET, (_id, props) => {
   }
 })
 
-// takes a single timesheet object and syncs with the api
-export const syncTimesheet = (timesheet) => {
+export const syncTimesheets = () => {
   return (dispatch, getState) => {
-    var syncParams = {
-      'data': [
-        toApiMapper(timesheet)
-      ]
-    }
-    const _id = timesheet.get('_id')
-    // Can only clock in a timesheet that does not exist on the server
-    if (timesheet.get('id') === null) {
+    const timesheetsToPost = getState().timesheetList.filter((timesheet) => !timesheet.get('id'))
+    const timesheetsToPut = getState().timesheetList.filter((timesheet) => (timesheet.get('id') && timesheet.get('dirty')))
+    
+    if (timesheetsToPost.size !== 0) {
+      const syncParamsPost = {
+        'data': timesheetsToPost.toArray().map((timesheet) => toApiMapper(timesheet))
+      }
       // POST a new one
-      return APIMethods.post('timesheets', AccessToken.get(), syncParams).then(function (response) {
-        return response.json()
-      }).then((jsondata) =>
-        dispatch(updateTimesheet(_id, { id: jsondata.results.timesheets['1'].id }))
-      )
-    } else {
-      // PUT to update
-      return APIMethods.put('timesheets', AccessToken.get(), syncParams).then(function (response) {
-        return response.json()
+      return APIMethods.post('timesheets', AccessToken.get(), syncParamsPost).then((response) => 
+        response.json()
+      ).then((jsondata) => {
+        console.log(fromApiMapper(jsondata, timesheetsToPost.keySeq().toArray()).toJS())
       })
     }
+    if (timesheetsToPut.size !== 0) {
+      const syncParamsPut = {
+        'data': timesheetsToPut.toArray().map((timesheet) => toApiMapper(timesheet))
+      }
+      console.log(syncParamsPut)
+    }
+
+    // const _id = timesheet.get('_id')
+    // // Can only clock in a timesheet that does not exist on the server
+    // if (timesheet) {
+    // } else {
+    //   // PUT to update
+    //   return APIMethods.put('timesheets', AccessToken.get(), syncParams).then(function (response) {
+    //     return response.json()
+    //   })
+    // }
   }
 }
 
 export const actions = {
   addTimesheet,
-  updateTimesheet
+  updateTimesheet,
+  syncTimesheets
 }
 
 // ------------------------------------

@@ -1,4 +1,4 @@
-import { Map, fromJS } from 'immutable'
+import { Map, OrderedMap, fromJS } from 'immutable'
 import config from 'config'
 import moment from 'moment'
 
@@ -83,6 +83,40 @@ export function toApiMapper (timesheet) {
     }
     return toApiMapperFields(timesheet, fields)
   }
+}
+
+function makeMap (key, value, fields) {
+  var map = Map({
+    _id: key
+  })
+  fields.forEach((field) => {
+    if (value[field]) {
+      map = map.set(field, value[field])
+    }
+  })
+  return map
+}
+
+export function fromApiMapper (response, keys) {
+  var fields = [
+    'type',
+    'user_id',
+    'jobcode_id',
+    'notes',
+    'customfields',
+    'id',
+    'start',
+    'end',
+    'duration',
+    'type'
+  ]
+  var timesheets = OrderedMap()
+  const timesheetResults = response.results.timesheets
+  var index = 1
+  keys.forEach((key) => {
+    timesheets = timesheets.set(key, makeMap(key, timesheetResults[index++], fields))
+  })
+  return timesheets
 }
 
 function toApiMapperFields (timesheet, fields) {
