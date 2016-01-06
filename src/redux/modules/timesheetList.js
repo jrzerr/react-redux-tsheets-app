@@ -41,6 +41,18 @@ export const syncTimesheets = () => {
     const timesheetsToPost = getState().timesheetList.filter((timesheet) => !timesheet.get('id'))
     const timesheetsToPut = getState().timesheetList.filter((timesheet) => (timesheet.get('id') && timesheet.get('dirty')))
 
+    if (timesheetsToPut.size !== 0) {
+      const syncParamsPut = {
+        'data': timesheetsToPut.toArray().map((timesheet) => toApiMapper(timesheet))
+      }
+      // POST a new one
+      return APIMethods.put('timesheets', AccessToken.get(), syncParamsPut).then((response) => 
+        response.json()
+      ).then((jsondata) => {
+        return dispatch(updateTimesheets(fromApiMapper(jsondata, timesheetsToPost)))
+      })
+    }
+
     if (timesheetsToPost.size !== 0) {
       const syncParamsPost = {
         'data': timesheetsToPost.toArray().map((timesheet) => toApiMapper(timesheet))
@@ -51,12 +63,6 @@ export const syncTimesheets = () => {
       ).then((jsondata) => {
         return dispatch(updateTimesheets(fromApiMapper(jsondata, timesheetsToPost)))
       })
-    }
-    if (timesheetsToPut.size !== 0) {
-      const syncParamsPut = {
-        'data': timesheetsToPut.toArray().map((timesheet) => toApiMapper(timesheet))
-      }
-      console.log(syncParamsPut)
     }
 
     // const _id = timesheet.get('_id')

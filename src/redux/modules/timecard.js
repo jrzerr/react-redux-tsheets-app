@@ -22,27 +22,24 @@ export const addOrUpdate = (props) => {
     } else {
       _id = uuid()
       dispatch(updateTimecardId(_id))   
-      dispatch(addTimesheet(_id, {
-        ...props,
-        _id
-      }))
+      dispatch(addTimesheet(_id, props.set('_id', _id)))
     }
   }  
 }
 
 export const clockIn = (value = new Date()) => {
-  return addOrUpdate({
+  return addOrUpdate(Map({
     start: value,
     on_the_clock: true
-  })
+  }))
 }
 
 export const clockOut = (value = new Date()) => {
   return (dispatch, getState) => {
-    dispatch(addOrUpdate({
+    dispatch(addOrUpdate(Map({
       end: value,
       on_the_clock: false
-    }))
+    })))
     // on clock out we should clear out the timecard id
     dispatch(updateTimecardId(undefined))
   }

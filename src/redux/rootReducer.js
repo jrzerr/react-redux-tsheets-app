@@ -6,6 +6,8 @@ import timecard from 'redux/modules/timecard'
 import jobcodes from 'redux/modules/jobcodes'
 import timesheetList from 'redux/modules/timesheetList'
 
+// This is ES2015 shorthand for mapping the "counter" state
+// to the "counter" reducer
 export default combineReducers({
   counter,
   timesheet,

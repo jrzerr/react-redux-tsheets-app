@@ -7,7 +7,7 @@ import { actions as jobcodeActions } from 'redux/modules/jobcodes'
 import { actions as timesheetListActions } from 'redux/modules/timesheetList'
 import { Timecard } from 'components/Timecard'
 import { getInitialTimesheet } from 'redux/utils/TimesheetUtils'
-import { Map } from 'immutable'
+import { Map, fromJS } from 'immutable'
 
 // We define mapStateToProps where we'd normally use
 // the @connect decorator so the data requirements are clear upfront, but then
@@ -38,12 +38,17 @@ export class TimecardView extends React.Component {
     updateTimecard: React.PropTypes.func.isRequired,
     updateParentIds: React.PropTypes.func.isRequired,
     jobcodes: React.PropTypes.instanceOf(Map).isRequired,
+    getJobcodes: React.PropTypes.func.isRequired,
     syncTimesheets: React.PropTypes.func.isRequired
   }
 
-  render () {
-    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, updateParentIds, syncTimesheets } = this.props
+  componentDidMount () {
+    const { getJobcodes } = this.props
+    getJobcodes()
+  }
 
+  render () {
+    const { updateTimecard, timesheet, clockIn, clockOut, jobcodes, getJobcodes, updateParentIds, syncTimesheets } = this.props
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
@@ -57,23 +62,29 @@ export class TimecardView extends React.Component {
               jobcodes={jobcodes.get('list')}
               parentId={jobcodes.getIn(['parent_ids', 'timecard'])}
               onChangeJobcode={(id) => {
-                updateTimecard({ jobcode_id: id })
-                updateParentIds({ timecard: '0' })
+                updateTimecard(fromJS({ jobcode_id: id }))
+                updateParentIds(fromJS({ timecard: 0 }))
               }}
-              onChangeJobcodeParent={(id) => updateParentIds({ timecard: id })} />
+              onChangeJobcodeParent={(id) => {
+                updateParentIds(fromJS({ timecard: parseInt(id, 10) }))
+              } }/>
           </div>
         </h2>
         <button className='btn btn-default'
-                onClick={() => updateTimecard({ start: new Date() })}>
+                onClick={() => updateTimecard(fromJS({ start: new Date() }))}>
           Set Start to Now
         </button>
         <button className='btn btn-default'
-                onClick={() => updateTimecard({ end: new Date() })}>
+                onClick={() => updateTimecard(fromJS({ end: new Date() }))}>
           Set End to Now
         </button>
         <button className='btn btn-default'
-                onClick={() => updateTimecard({ notes: 'These are some new notes' })}>
+                onClick={() => updateTimecard(fromJS({ notes: 'These are some new notes' }))}>
           Set Notes
+        </button>
+        <button className='btn btn-default'
+                onClick={() => getJobcodes()}>
+          Fetch Jobcodes
         </button>
         <hr />
         <Link to='/about'>Go To About View</Link>

@@ -13,7 +13,7 @@ export function getInitialTimesheet () {
     date: null,
     start: null,
     end: null,
-    jobcode_id: '',
+    jobcode_id: 0,
     user_id: user_id,
     customfields: {
       // $$$ may need to specify your own here
@@ -85,18 +85,6 @@ export function toApiMapper (timesheet) {
   }
 }
 
-function makeMap (key, value, fields) {
-  var map = Map({
-    _id: key
-  })
-  fields.forEach((field) => {
-    if (value[field]) {
-      map = map.set(field, value[field])
-    }
-  })
-  return map
-}
-
 function timesheetToImmutable (timesheet) {
   return fromJS({
     'type': timesheet.type,
@@ -105,8 +93,8 @@ function timesheetToImmutable (timesheet) {
     'notes': timesheet.notes,
     'customfields': timesheet.customfields,
     'id': timesheet.id,
-    'start': timesheet.start,
-    'end': timesheet.end,
+    'start': (!timesheet.start) ? null : new Date(timesheet.start),
+    'end': (!timesheet.end) ? null : new Date(timesheet.end),
     'duration': timesheet.duration,
   })
 }
