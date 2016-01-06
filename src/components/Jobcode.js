@@ -34,10 +34,6 @@ export class Jobcode extends React.Component {
       </div>
     )
   }
-
-  _change (event) {
-    this.props.onChange(event.target.value)
-  }
 }
 
 export default Jobcode
