@@ -16,7 +16,13 @@ export class Jobcode extends React.Component {
   }
 
   render () {
-    const { jobcodes, parentId, currentId, onChange, onChangeParent } = this.props
+    const {
+      jobcodes,
+      parentId,
+      currentId,
+      onChange,
+      onChangeParent
+    } = this.props
     return (
       <div className=''>
        <ManagedList
