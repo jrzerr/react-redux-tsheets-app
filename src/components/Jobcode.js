@@ -11,9 +11,6 @@ export class Jobcode extends React.Component {
     onChangeParent: React.PropTypes.func.isRequired,
     currentId: React.PropTypes.number.isRequired
   }
-  constructor (props) {
-    super(props)
-  }
 
   render () {
     const {
