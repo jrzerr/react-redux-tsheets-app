@@ -62,37 +62,47 @@ export class ManagedList extends React.Component {
       isSelected = _isSelected
     }
     let currentItem = list.get(currentId.toString())
+    let backButton = this._renderBackButton(parentId, currentItem, list, style, this._handleBack.bind(this))
+    let listComponent = this._renderList(parentId, currentItem, list, style, selectedStyle, isSelected, this._handleSelect.bind(this))
+    return (
+      <div className=''>
+        {backButton}
+        {listComponent}
+      </div>
+    )
+  }
+
+  _renderBackButton (parentId, currentItem, list, style, onClick) {
     let backButton
     if (parentId !== 0) {
       let parentItem = list.get(parentId.toString())
       let parentItemParentId = parentItem.get('parent_id')
-      backButton = <button key={parentId + 'back'} style={style} onClick={() => this._handleBack(parentItemParentId)}> &lt;</button>
+      backButton = <button key={parentId + 'back'} style={style} onClick={() => onClick(parentItemParentId)}> &lt;</button>
     } else {
       backButton = ''
     }
-    return (
-      <div className=''>
-        {backButton}
-        {list.filter((v) => v.get('parent_id') === parentId).map((value, key) => {
-          var s
-          if (isSelected(value, currentItem, list)) {
-            s = selectedStyle
-          } else {
-            s = style
-          }
-          var content = value.get('name')
-          if (value.get('has_children')) {
-            content += ' >'
-          }
-          return (
-              <button
-                key={key}
-                style={s}
-                onClick={() => this._handleSelect(value, parseInt(key, 10))}>{content}</button>
-            )
-        }).toArray()}
-      </div>
-    )
+    return backButton
+  }
+
+  _renderList (parentId, currentItem, list, style, selectedStyle, isSelected, onClick) {
+    return list.filter((v) => v.get('parent_id') === parentId).map((value, key) => {
+      var s
+      if (isSelected(value, currentItem, list)) {
+        s = selectedStyle
+      } else {
+        s = style
+      }
+      var content = value.get('name')
+      if (value.get('has_children')) {
+        content += ' >'
+      }
+      return (
+          <button
+            key={key}
+            style={s}
+            onClick={() => onClick(value, parseInt(key, 10))}>{content}</button>
+        )
+    }).toArray()
   }
 
   _handleSelect (value, key) {
