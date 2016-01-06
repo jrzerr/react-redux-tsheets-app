@@ -15,6 +15,7 @@ export function getInitialTimesheet () {
     end: null,
     jobcode_id: 0,
     user_id: user_id,
+    dirty: false,
     customfields: {
       // $$$ may need to specify your own here
       67540: 'd1',
@@ -96,6 +97,7 @@ function timesheetToImmutable (timesheet) {
     'start': (!timesheet.start) ? null : new Date(timesheet.start),
     'end': (!timesheet.end) ? null : new Date(timesheet.end),
     'duration': timesheet.duration,
+    'dirty': false
   })
 }
 

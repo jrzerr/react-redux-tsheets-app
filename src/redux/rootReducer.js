@@ -10,7 +10,6 @@ import timesheetList from 'redux/modules/timesheetList'
 // to the "counter" reducer
 export default combineReducers({
   counter,
-  timesheet,
   timecard,
   jobcodes,
   timesheetList,

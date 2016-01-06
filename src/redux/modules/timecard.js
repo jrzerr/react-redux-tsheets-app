@@ -18,11 +18,11 @@ export const addOrUpdate = (props) => {
   return (dispatch, getState) => {
     var _id = getState().timecard.get('_id')
     if (_id) {
-      dispatch(updateTimesheet(_id, props))
+      dispatch(updateTimesheet(props.set('_id', _id)))
     } else {
       _id = uuid()
       dispatch(updateTimecardId(_id))   
-      dispatch(addTimesheet(_id, props.set('_id', _id)))
+      dispatch(addTimesheet(props.set('_id', _id)))
     }
   }  
 }

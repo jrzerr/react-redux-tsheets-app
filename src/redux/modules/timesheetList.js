@@ -15,42 +15,28 @@ export const ADD_AND_SYNC_TIMESHEET = 'ADD_AND_SYNC_TIMESHEET'
 // ------------------------------------
 
 // ------------------------------------
-export const addTimesheet = createAction(ADD_TIMESHEET, (_id, props) => {
-  return {
-    _id,
-    props
-  }
-})
+export const addTimesheet = createAction(ADD_TIMESHEET, (props) => props)
 
-export const updateTimesheet = createAction(UPDATE_TIMESHEET, (_id, props) => {
-  return {
-    _id,
-    props
-  }
-})
+export const updateTimesheet = createAction(UPDATE_TIMESHEET, (props) => props)
 
 // takes an ordered map of timesheets and merges into the current list
-export const updateTimesheets = createAction(UPDATE_TIMESHEETS, (props) => {
-  return {
-    props
-  }
-})
+export const updateTimesheets = createAction(UPDATE_TIMESHEETS, (props) => props)
 
 export const syncTimesheets = () => {
   return (dispatch, getState) => {
     const timesheetsToPost = getState().timesheetList.filter((timesheet) => !timesheet.get('id'))
     const timesheetsToPut = getState().timesheetList.filter((timesheet) => (timesheet.get('id') && timesheet.get('dirty')))
-
+    var promiseArray = []
     if (timesheetsToPut.size !== 0) {
       const syncParamsPut = {
         'data': timesheetsToPut.toArray().map((timesheet) => toApiMapper(timesheet))
       }
-      // POST a new one
-      return APIMethods.put('timesheets', AccessToken.get(), syncParamsPut).then((response) => 
+      // PUT to update an existing record
+      promiseArray.push(APIMethods.put('timesheets', AccessToken.get(), syncParamsPut).then((response) => 
         response.json()
-      ).then((jsondata) => {
-        return dispatch(updateTimesheets(fromApiMapper(jsondata, timesheetsToPost)))
-      })
+      ).then((jsondata) => 
+        dispatch(updateTimesheets(fromApiMapper(jsondata, timesheetsToPut)))
+      ))
     }
 
     if (timesheetsToPost.size !== 0) {
@@ -58,13 +44,13 @@ export const syncTimesheets = () => {
         'data': timesheetsToPost.toArray().map((timesheet) => toApiMapper(timesheet))
       }
       // POST a new one
-      return APIMethods.post('timesheets', AccessToken.get(), syncParamsPost).then((response) => 
+      promiseArray.push(APIMethods.post('timesheets', AccessToken.get(), syncParamsPost).then((response) => 
         response.json()
-      ).then((jsondata) => {
-        return dispatch(updateTimesheets(fromApiMapper(jsondata, timesheetsToPost)))
-      })
+      ).then((jsondata) => 
+        dispatch(updateTimesheets(fromApiMapper(jsondata, timesheetsToPost)))
+      ))
     }
-
+    return Promise.all(promiseArray)
     // const _id = timesheet.get('_id')
     // // Can only clock in a timesheet that does not exist on the server
     // if (timesheet) {
@@ -89,14 +75,14 @@ export const actions = {
 // ------------------------------------
 export default handleActions({
   ADD_TIMESHEET: (state, { payload }) => {
-    return state.mergeDeepIn([payload._id], 
-      getInitialTimesheet().mergeDeep(payload.props))
+    return state.mergeDeepIn([payload.get('_id')], 
+      getInitialTimesheet().mergeDeep(payload))
   },
   UPDATE_TIMESHEET: (state, { payload }) => {
-    return state.mergeDeepIn([payload._id],
-      payload.props)
+    return state.mergeDeepIn([payload.get('_id')],
+      payload.set('dirty', true))
   },
   UPDATE_TIMESHEETS: (state, { payload }) => {
-    return state.mergeDeep(payload.props)
+    return state.mergeDeep(payload)
   }
 }, OrderedMap())
