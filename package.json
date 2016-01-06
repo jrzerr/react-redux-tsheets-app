@@ -1,6 +1,6 @@
 {
   "name": "react-redux-tsheets-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A TSheets time tracking app with React, Redux, and React-Router!",
   "main": "index.js",
   "scripts": {
