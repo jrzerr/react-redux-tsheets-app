@@ -37,9 +37,6 @@ export class ManagedList extends React.Component {
     buttonStyle: React.PropTypes.object,
     isSelected: React.PropTypes.func
   }
-  constructor (props) {
-    super(props)
-  }
 
   render () {
     var {
@@ -62,7 +59,7 @@ export class ManagedList extends React.Component {
       isSelected = _isSelected
     }
     let currentItem = list.get(currentId.toString())
-    let backButton = this._renderBackButton(parentId, currentItem, list, style, this._handleBack.bind(this))
+    let backButton = this._renderBackButton(parentId, list, style, this._handleBack.bind(this))
     let listComponent = this._renderList(parentId, currentItem, list, style, selectedStyle, isSelected, this._handleSelect.bind(this))
     return (
       <div className=''>
@@ -72,7 +69,14 @@ export class ManagedList extends React.Component {
     )
   }
 
-  _renderBackButton (parentId, currentItem, list, style, onClick) {
+  /**
+   * @param  {Number} parentId - the parent jobcode id that you should go back to
+   * @param  {OrderedMap} list - list of jobcodes
+   * @param  {String} style - the style to apply to the button
+   * @param  {Func} onClick - The function to call when the button is clicked
+   * @return {String} - Markup to use as a back button
+   */
+  _renderBackButton (parentId, list, style, onClick) {
     let backButton
     if (parentId !== 0) {
       let parentItem = list.get(parentId.toString())
@@ -84,6 +88,16 @@ export class ManagedList extends React.Component {
     return backButton
   }
 
+  /**
+   * @param  {Number} parentId - the parent jobcode id that you should go back to
+   * @param  {Map} currentItem - the current jobcode
+   * @param  {OrderedMap} list - list of jobcodes
+   * @param  {String} style - the style to apply to the button
+   * @param  {String} selectedStyle - the style to apply to the button if it is selected
+   * @param  {Func} isSelected - a function that returns true if the item should be considered selected
+   * @param  {Func} onClick - The function to call when a button is clicked
+   * @return {String} - Markup to use as a list
+   */
   _renderList (parentId, currentItem, list, style, selectedStyle, isSelected, onClick) {
     return list.filter((v) => v.get('parent_id') === parentId).map((value, key) => {
       var s
