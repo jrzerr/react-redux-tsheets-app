@@ -54,7 +54,6 @@ export function setJobcode (timesheet, id) {
  * @return {Object} JSON that represents the TimesheetModel object
  */
 export function toApiMapper (timesheet) {
-  console.log(timesheet.toJS())
   var fields = [
     'type',
     'user_id',
