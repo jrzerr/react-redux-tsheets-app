@@ -20,9 +20,12 @@ export const setJobcodes = createAction(SET_JOBCODES, value => value)
 export const getJobcodes = () => {
   return (dispatch, getState) => {
     var jobcodeOptions = {}
-    JobcodeResource.get(jobcodeOptions).then(function (jsondata) {
+    return JobcodeResource.get(jobcodeOptions).then((jsondata) => {
       dispatch(setJobcodes(jsondata))
+      return jsondata
+    }).then((jsondata) => {
       dispatch(updateParentIds(JobcodeUtils.getInitialJobcodeParentIds()))
+      return jsondata
     })
   }
 }
