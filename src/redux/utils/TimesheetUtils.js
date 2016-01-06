@@ -97,26 +97,27 @@ function makeMap (key, value, fields) {
   return map
 }
 
-export function fromApiMapper (response, keys) {
-  var fields = [
-    'type',
-    'user_id',
-    'jobcode_id',
-    'notes',
-    'customfields',
-    'id',
-    'start',
-    'end',
-    'duration',
-    'type'
-  ]
-  var timesheets = OrderedMap()
-  const timesheetResults = response.results.timesheets
-  var index = 1
-  keys.forEach((key) => {
-    timesheets = timesheets.set(key, makeMap(key, timesheetResults[index++], fields))
+function timesheetToImmutable (timesheet) {
+  return fromJS({
+    'type': timesheet.type,
+    'user_id': timesheet.user_id,
+    'jobcode_id': timesheet.jobcode_id,
+    'notes': timesheet.notes,
+    'customfields': timesheet.customfields,
+    'id': timesheet.id,
+    'start': timesheet.start,
+    'end': timesheet.end,
+    'duration': timesheet.duration,
   })
-  return timesheets
+}
+
+export function fromApiMapper (response, timesheetsToMerge) {
+  const timesheets = response.results.timesheets
+
+  var index = 1
+  return timesheetsToMerge.map((timesheet) => {
+    return timesheet.mergeDeep(timesheetToImmutable(timesheets[index++]))
+  })
 }
 
 function toApiMapperFields (timesheet, fields) {

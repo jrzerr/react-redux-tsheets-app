@@ -8,6 +8,7 @@ import * as AccessToken from 'redux/utils/AccessTokenUtils'
 // ------------------------------------
 export const ADD_TIMESHEET = 'ADD_TIMESHEET'
 export const UPDATE_TIMESHEET = 'UPDATE_TIMESHEET'
+export const UPDATE_TIMESHEETS = 'UPDATE_TIMESHEETS'
 export const UPDATE_AND_SYNC_TIMESHEET = 'UPDATE_AND_SYNC_TIMESHEET'
 export const ADD_AND_SYNC_TIMESHEET = 'ADD_AND_SYNC_TIMESHEET'
 
@@ -28,11 +29,18 @@ export const updateTimesheet = createAction(UPDATE_TIMESHEET, (_id, props) => {
   }
 })
 
+// takes an ordered map of timesheets and merges into the current list
+export const updateTimesheets = createAction(UPDATE_TIMESHEETS, (props) => {
+  return {
+    props
+  }
+})
+
 export const syncTimesheets = () => {
   return (dispatch, getState) => {
     const timesheetsToPost = getState().timesheetList.filter((timesheet) => !timesheet.get('id'))
     const timesheetsToPut = getState().timesheetList.filter((timesheet) => (timesheet.get('id') && timesheet.get('dirty')))
-    
+
     if (timesheetsToPost.size !== 0) {
       const syncParamsPost = {
         'data': timesheetsToPost.toArray().map((timesheet) => toApiMapper(timesheet))
@@ -41,7 +49,7 @@ export const syncTimesheets = () => {
       return APIMethods.post('timesheets', AccessToken.get(), syncParamsPost).then((response) => 
         response.json()
       ).then((jsondata) => {
-        console.log(fromApiMapper(jsondata, timesheetsToPost.keySeq().toArray()).toJS())
+        return dispatch(updateTimesheets(fromApiMapper(jsondata, timesheetsToPost)))
       })
     }
     if (timesheetsToPut.size !== 0) {
@@ -66,6 +74,7 @@ export const syncTimesheets = () => {
 export const actions = {
   addTimesheet,
   updateTimesheet,
+  updateTimesheets,
   syncTimesheets
 }
 
@@ -80,5 +89,8 @@ export default handleActions({
   UPDATE_TIMESHEET: (state, { payload }) => {
     return state.mergeDeepIn([payload._id],
       payload.props)
+  },
+  UPDATE_TIMESHEETS: (state, { payload }) => {
+    return state.mergeDeep(payload.props)
   }
 }, OrderedMap())
