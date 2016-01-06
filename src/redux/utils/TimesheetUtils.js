@@ -1,4 +1,4 @@
-import { Map, fromJS } from 'immutable'
+import { Map, OrderedMap, fromJS } from 'immutable'
 import config from 'config'
 import moment from 'moment'
 
@@ -6,6 +6,7 @@ export function getInitialTimesheet () {
   var user_id = config.tsheets_user_id
   return fromJS({
     id: null,
+    _id: null,
     notes: '',
     type: 'regular',
     on_the_clock: false,
@@ -14,6 +15,7 @@ export function getInitialTimesheet () {
     end: null,
     jobcode_id: 0,
     user_id: user_id,
+    dirty: false,
     customfields: {
       // $$$ may need to specify your own here
       67540: 'd1',
@@ -53,7 +55,6 @@ export function setJobcode (timesheet, id) {
  * @return {Object} JSON that represents the TimesheetModel object
  */
 export function toApiMapper (timesheet) {
-  console.log(timesheet.toJS())
   var fields = [
     'type',
     'user_id',
@@ -83,6 +84,30 @@ export function toApiMapper (timesheet) {
     }
     return toApiMapperFields(timesheet, fields)
   }
+}
+
+function timesheetToImmutable (timesheet) {
+  return fromJS({
+    'type': timesheet.type,
+    'user_id': timesheet.user_id,
+    'jobcode_id': timesheet.jobcode_id,
+    'notes': timesheet.notes,
+    'customfields': timesheet.customfields,
+    'id': timesheet.id,
+    'start': (!timesheet.start) ? null : new Date(timesheet.start),
+    'end': (!timesheet.end) ? null : new Date(timesheet.end),
+    'duration': timesheet.duration,
+    'dirty': false
+  })
+}
+
+export function fromApiMapper (response, timesheetsToMerge) {
+  const timesheets = response.results.timesheets
+
+  var index = 1
+  return timesheetsToMerge.map((timesheet) => {
+    return timesheet.mergeDeep(timesheetToImmutable(timesheets[index++]))
+  })
 }
 
 function toApiMapperFields (timesheet, fields) {

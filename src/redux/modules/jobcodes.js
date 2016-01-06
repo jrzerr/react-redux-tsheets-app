@@ -1,4 +1,5 @@
 import { handleActions, createAction } from 'redux-actions'
+import { fromJS } from 'immutable'
 import * as JobcodeUtils from 'redux/utils/JobcodeUtils'
 import * as JobcodeResource from 'redux/utils/JobcodeResource'
 
@@ -21,11 +22,9 @@ export const getJobcodes = () => {
   return (dispatch, getState) => {
     var jobcodeOptions = {}
     return JobcodeResource.get(jobcodeOptions).then((jsondata) => {
-      dispatch(setJobcodes(jsondata))
-      return jsondata
+      return dispatch(setJobcodes(fromJS(jsondata).toOrderedMap()))
     }).then((jsondata) => {
-      dispatch(updateParentIds(JobcodeUtils.getInitialJobcodeParentIds()))
-      return jsondata
+      return dispatch(updateParentIds(JobcodeUtils.getInitialJobcodeParentIds()))
     })
   }
 }
@@ -41,10 +40,10 @@ export const actions = {
 // ------------------------------------
 export default handleActions({
   SET_JOBCODES: (state, { payload }) => {
-    return JobcodeUtils.set(state, payload)
+    return state.set('list', payload)
   },
 
   UPDATE_PARENT_IDS: (state, { payload }) => {
-    return JobcodeUtils.updateParentIds(state, payload)
+    return state.mergeDeepIn(['parent_ids'], payload)
   }
 }, JobcodeUtils.getInitialJobcodes())

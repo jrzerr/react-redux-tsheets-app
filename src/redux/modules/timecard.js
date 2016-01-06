@@ -1,76 +1,67 @@
 import { createAction, handleActions } from 'redux-actions'
-import * as TimesheetUtils from 'redux/utils/TimesheetUtils'
-import * as TimesheetResource from 'redux/utils/TimesheetResource'
+import { Map } from 'immutable'
+import { uuid } from 'redux/utils/uuid'
+import { addTimesheet, updateTimesheet } from 'redux/modules/timesheetList'
 
 // ------------------------------------
 // Constants
 // ------------------------------------
+export const UPDATE_TIMECARD_ID = 'UPDATE_TIMECARD_ID'
 export const UPDATE_TIMECARD = 'UPDATE_TIMECARD'
-export const CLOCK_IN = 'CLOCK_IN'
-export const CLOCK_OUT = 'CLOCK_OUT'
 
 // ------------------------------------
 // Actions
 // ------------------------------------
-export const updateTimecard = createAction(UPDATE_TIMECARD, value => value)
+export const updateTimecardId = createAction(UPDATE_TIMECARD_ID, value => value)
+
+export const addOrUpdate = (props) => {
+  return (dispatch, getState) => {
+    var _id = getState().timecard.get('_id')
+    if (_id) {
+      dispatch(updateTimesheet(props.set('_id', _id)))
+    } else {
+      _id = uuid()
+      dispatch(updateTimecardId(_id))   
+      dispatch(addTimesheet(props.set('_id', _id)))
+    }
+  }  
+}
 
 export const clockIn = (value = new Date()) => {
-  return (dispatch, getState) => {
-    dispatch({ type: CLOCK_IN, payload: value })
-    return dispatch(syncTimesheet(getState().timecard)).then(() => {
-      console.log('clock in syncTimesheet done in clock in ac')
-    })
-  }
+  return addOrUpdate(Map({
+    start: value,
+    on_the_clock: true
+  }))
 }
 
 export const clockOut = (value = new Date()) => {
   return (dispatch, getState) => {
-    dispatch({ type: CLOCK_OUT, payload: value })
-    return dispatch(syncTimesheet(getState().timecard)).then(() => {
-      console.log('clock out syncTimesheet done in clock out ac')
-    })
+    dispatch(addOrUpdate(Map({
+      end: value,
+      on_the_clock: false
+    })))
+    // on clock out we should clear out the timecard id
+    dispatch(updateTimecardId(undefined))
   }
 }
 
-export const syncTimesheet = (timesheet) => {
-  return (dispatch, getState) => {
-    // Can only clock in a timesheet that does not exist on the server
-    if (timesheet.get('id') === null) {
-      // POST a new one
-      return TimesheetResource.post(timesheet).then((jsondata) =>
-        dispatch(updateTimecard({ id: jsondata['1'].id }))
-      )
-    } else {
-      // PUT an existing one
-      return TimesheetResource.put(timesheet).then((jsondata) =>
-        // dispatch(updateTimecard({ id: jsondata['1'].id }))
-        jsondata
-      )
-    }
-  }
+export const updateTimecard = (props) => {
+  return addOrUpdate(props)
 }
 
 export const actions = {
+  updateTimecardId,
   updateTimecard,
   clockIn,
-  clockOut,
-  syncTimesheet
+  clockOut
 }
 
 // ------------------------------------
 // Reducer
 // ------------------------------------
 export default handleActions({
-  UPDATE_TIMECARD: (state, { payload }) => {
-    return TimesheetUtils.update(state, payload)
+  UPDATE_TIMECARD_ID: (state, { payload }) => {
+    return state.set('_id', payload)
   },
 
-  CLOCK_IN: (state, { payload }) => {
-    return TimesheetUtils.clockIn(state, payload)
-  },
-
-  CLOCK_OUT: (state, { payload }) => {
-    return TimesheetUtils.clockOut(state, payload)
-  }
-
-}, TimesheetUtils.getInitialTimesheet())
+}, Map({ _id: undefined }))
