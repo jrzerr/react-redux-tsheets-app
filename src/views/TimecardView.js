@@ -52,7 +52,9 @@ export class TimecardView extends React.Component {
     return (
       <div className='container text-center'>
         <h1>Welcome to the React Redux Starter Kit</h1>
-        <button onClick={syncTimesheets}>Sync</button>
+        <button 
+        className='btn btn-success'
+        onClick={syncTimesheets}>Sync</button>
         <h2>
           Timecard:&nbsp;
           <div>

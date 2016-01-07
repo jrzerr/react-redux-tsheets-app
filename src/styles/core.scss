@@ -10,7 +10,7 @@ html {
 html,
 body {
   margin: 0;
-  padding: 0;
+  padding: 0px;
   height: 100%;
 }
 
@@ -19,7 +19,18 @@ body {
 *:after {
   box-sizing: inherit;
 }
-
-.jobcode-button {
+  
+.list-button {
+  background-color: white;
+  border: none;
+  border-bottom: thin solid #000;
   display: block;
+  padding: 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.list-button-selected {
+  @extend .list-button;
+  border-color: blue;
 }

@@ -21,8 +21,8 @@ export const addOrUpdate = (props) => {
       dispatch(updateTimesheet(props.set('_id', _id)))
     } else {
       _id = uuid()
-      dispatch(updateTimecardId(_id))   
       dispatch(addTimesheet(props.set('_id', _id)))
+      dispatch(updateTimecardId(_id))   
     }
   }  
 }

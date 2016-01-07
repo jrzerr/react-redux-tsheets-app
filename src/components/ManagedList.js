@@ -1,4 +1,5 @@
 import React from 'react'
+import styles from 'styles/core.scss'
 import { OrderedMap } from 'immutable'
 var defaultButtonStyle = {
   display: 'block'
@@ -46,21 +47,12 @@ export class ManagedList extends React.Component {
       isSelected,
       parentId
     } = this.props
-    var style, selectedStyle
-    if (buttonStyle === undefined) {
-      style = defaultButtonStyle
-    } else {
-      style = buttonStyle
-    }
-    selectedStyle = Object.assign({}, style)
-    selectedStyle.borderStyle = 'solid'
-    selectedStyle.borderWidth = 1
     if (!isSelected) {
       isSelected = _isSelected
     }
     let currentItem = list.get(currentId.toString())
-    let backButton = this._renderBackButton(parentId, list, style, this._handleBack.bind(this))
-    let listComponent = this._renderList(parentId, currentItem, list, style, selectedStyle, isSelected, this._handleSelect.bind(this))
+    let backButton = this._renderBackButton(parentId, list, this._handleBack.bind(this))
+    let listComponent = this._renderList(parentId, currentItem, list, isSelected, this._handleSelect.bind(this))
     return (
       <div className=''>
         {backButton}
@@ -76,12 +68,15 @@ export class ManagedList extends React.Component {
    * @param  {Func} onClick - The function to call when the button is clicked
    * @return {String} - Markup to use as a back button
    */
-  _renderBackButton (parentId, list, style, onClick) {
+  _renderBackButton (parentId, list, onClick) {
     let backButton
     if (parentId !== 0) {
       let parentItem = list.get(parentId.toString())
       let parentItemParentId = parentItem.get('parent_id')
-      backButton = <button key={parentId + 'back'} style={style} onClick={() => onClick(parentItemParentId)}> &lt;</button>
+      backButton = <button key={parentId + 'back'}
+      className='btn btn-warning'
+      style={{ display: 'block '}}
+      onClick={() => onClick(parentItemParentId)}> &lt; Back</button>
     } else {
       backButton = ''
     }
@@ -98,13 +93,13 @@ export class ManagedList extends React.Component {
    * @param  {Func} onClick - The function to call when a button is clicked
    * @return {String} - Markup to use as a list
    */
-  _renderList (parentId, currentItem, list, style, selectedStyle, isSelected, onClick) {
+  _renderList (parentId, currentItem, list, isSelected, onClick) {
     return list.filter((v) => v.get('parent_id') === parentId).map((value, key) => {
-      var s
+      var buttonClass
       if (isSelected(value, currentItem, list)) {
-        s = selectedStyle
+        buttonClass = 'btn btn-primary'
       } else {
-        s = style
+        buttonClass = 'btn btn-default'
       }
       var content = value.get('name')
       if (value.get('has_children')) {
@@ -113,7 +108,8 @@ export class ManagedList extends React.Component {
       return (
           <button
             key={key}
-            style={s}
+            className={buttonClass}
+            style={{ display: 'block' }}
             onClick={() => onClick(value, parseInt(key, 10))}>{content}</button>
         )
     }).toArray()
