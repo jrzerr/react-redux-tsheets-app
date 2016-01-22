@@ -75,7 +75,7 @@ export class ManagedList extends React.Component {
       let parentItemParentId = parentItem.get('parent_id')
       backButton = <button key={parentId + 'back'}
       className='btn btn-warning'
-      style={{ display: 'block '}}
+      style={{ display: 'block' }}
       onClick={() => onClick(parentItemParentId)}> &lt; Back</button>
     } else {
       backButton = ''
